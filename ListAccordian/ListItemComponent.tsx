@@ -8,24 +8,40 @@ import {
 } from 'react-native-paper';
 
 interface MyData {
-  login: string;
-  id: number;
-  node_id: string;
-  avatar_url: string;
-  gravatar_id: string;
-  url: string;
-  html_url: string;
-  followers_url: string;
-  following_url: string;
-  gists_url: string;
-  starred_url: string;
-  subscriptions_url: string;
-  organizations_url: string;
-  repos_url: string;
-  events_url: string;
-  received_events_url: string;
-  type: string;
-  site_admin: boolean;
+  id: string;
+  brickClass: string;
+  serialNumber: string;
+  description: string;
+  model: string;
+  modelNumber: string;
+  equipmentFamily: string;
+  cioTags: string;
+  productType: string;
+  picControllerVersion: string;
+  softwareVersion: string;
+  isMigrated: string;
+  isOnline: string;
+  customer: string;
+  location: {
+    id: string;
+    salesforceLocationId: string;
+    name: string;
+    street: string;
+    city: string;
+    state: string;
+    zip: string;
+    country: string;
+    timezone: string;
+    latitude: string;
+    longitude: string;
+  };
+  connectivityStatus: string;
+  overallConnectivityStatus: string;
+  runStatus: string;
+  name: string;
+  edge: {
+    connectivityStatus: string;
+  };
 }
 interface MyProps {
   props: MyData[];

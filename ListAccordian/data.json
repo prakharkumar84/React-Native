@@ -1,0 +1,36 @@
+[
+  {
+    "id": "00788b4d-2c16-51df-a7fd-fbc41b4d578c",
+    "brickClass": "Chiller",
+    "serialNumber": "4717Q86863",
+    "description": null,
+    "model": "30RB - Air Cooled Chiller Scroll",
+    "modelNumber": "30RBFO7065-L- - - 3",
+    "equipmentFamily": null,
+    "cioTags": null,
+    "productType": null,
+    "picControllerVersion": null,
+    "softwareVersion": null,
+    "isMigrated": false,
+    "isOnline": null,
+    "customer": null,
+    "location": {
+      "id": "7f7b2fe1-7f21-4c00-9683-cdace4f9010b",
+      "salesforceLocationId": "LegacyLocation101",
+      "name": "MindSpace",
+      "street": "1200 1st Ave",
+      "city": "Hyderabad",
+      "state": "Telangana",
+      "zip": "500008",
+      "country": "India",
+      "timezone": "Asia/Calcutta",
+      "latitude": "40.095106",
+      "longitude": "-75.413334"
+    },
+    "connectivityStatus": null,
+    "overallConnectivityStatus": null,
+    "runStatus": null,
+    "name": "233423424",
+    "edge": {"connectivityStatus": null}
+  }
+]
