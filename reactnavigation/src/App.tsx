@@ -1,9 +1,9 @@
 import * as React from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import LoginScreen from './LoginScreen';
-import ChillerList from './ChillerList';
-import Chiller from './chillers';
+import LoginScreen from './components/LoginScreen';
+import ChillerList from './components/ChillerList';
+import Chiller from './components/chillers';
 
 type RootStackParamList = {
   LoginScreen: undefined;

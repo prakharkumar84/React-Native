@@ -12,7 +12,7 @@ const ChillerList: React.FC = () => {
       right={() => <></>}
       style={styles.accordion}
       titleStyle={styles.title}
-      expandedTitleStyle={styles.expandedTitle}
+      // expandedTitleStyle={styles.expandedTitle}
       descriptionStyle={styles.description}>
       <List.Item
         title={`Brick Class: ${chiller.brickClass}`}
