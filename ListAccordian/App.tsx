@@ -4,26 +4,16 @@ import axios from 'axios';
 import ListItemComponent from './ListItemComponent';
 import NewListComponent from './NewListComponent';
 
-interface MyLocation {
-  [key: string]: string | number | boolean | MyLocation;
-}
-interface MyCustomer {
-  [key: string]: string | number | boolean | MyCustomer;
-}
-interface MyEdge {
-  [key: string]: string | number | boolean | MyEdge;
-}
-interface GitHub {
-  [key: string]: string | number | boolean | GitHub;
+interface NestedObject {
+  [key: string]: null | string | number | boolean | NestedObject;
 }
 interface MyData {
-  [key: string]: string | number | boolean | MyEdge | MyLocation | MyCustomer;
+  [key: string]: null | string | number | boolean | NestedObject;
 }
 
 const App = () => {
-  const [data, setData] = useState<GitHub[]>([]);
+  const [data, setData] = useState<MyData[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const url = './data.json';
 
   useEffect(() => {
     fetchData();
@@ -31,14 +21,15 @@ const App = () => {
 
   const fetchData = async () => {
     try {
-      const response = await fetch('https://api.github.com/users/hadley/orgs', {
-        headers: {'Content-Type': 'application/json; charset=utf-8'},
-      });
+      const response = await fetch(
+        'https://prakharkumar84.github.io/Data/data.json',
+        {
+          headers: {'Content-Type': 'application/json; charset=utf-8'},
+        },
+      );
       const jsonData = await response.json();
-      console.log(jsonData); // Process the JSON data as needed
       setData(jsonData);
       setIsLoading(true);
-      console.log(data[0]);
     } catch (error) {
       console.error('Error fetching data:', error);
     }
@@ -47,7 +38,7 @@ const App = () => {
   return (
     <ScrollView>
       <View style={styles.container}>
-        {/* {isLoading && <ListItemComponent props={data} />} */}
+        {isLoading && <ListItemComponent props={data} />}
       </View>
     </ScrollView>
   );

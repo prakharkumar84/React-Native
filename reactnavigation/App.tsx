@@ -2,9 +2,14 @@ import * as React from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import LoginScreen from './LoginScreen';
-import Home from './Home';
+import ChillerList from './ChillerList';
+import Chiller from './chillers';
 
-const Stack = createNativeStackNavigator();
+type RootStackParamList = {
+  LoginScreen: undefined;
+  ChillerList: Chiller;
+};
+const Stack = createNativeStackNavigator<RootStackParamList>();
 
 const App = () => {
   return (
@@ -17,7 +22,11 @@ const App = () => {
           component={LoginScreen}
           options={{title: 'Login'}}
         />
-        <Stack.Screen name="Home" component={Home} options={{title: 'Home'}} />
+        <Stack.Screen
+          name="ChillerList"
+          component={ChillerList}
+          options={{title: 'Home'}}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );

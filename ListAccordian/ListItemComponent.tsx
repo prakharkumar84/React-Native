@@ -7,153 +7,84 @@ import {
   IconButton,
 } from 'react-native-paper';
 
+interface NestedObject {
+  [key: string]: null | string | number | boolean | NestedObject;
+}
 interface MyData {
-  id: string;
-  brickClass: string;
-  serialNumber: string;
-  description: string;
-  model: string;
-  modelNumber: string;
-  equipmentFamily: string;
-  cioTags: string;
-  productType: string;
-  picControllerVersion: string;
-  softwareVersion: string;
-  isMigrated: string;
-  isOnline: string;
-  customer: string;
-  location: {
-    id: string;
-    salesforceLocationId: string;
-    name: string;
-    street: string;
-    city: string;
-    state: string;
-    zip: string;
-    country: string;
-    timezone: string;
-    latitude: string;
-    longitude: string;
-  };
-  connectivityStatus: string;
-  overallConnectivityStatus: string;
-  runStatus: string;
-  name: string;
-  edge: {
-    connectivityStatus: string;
-  };
+  [key: string]: null | string | number | boolean | NestedObject;
 }
 interface MyProps {
   props: MyData[];
 }
 
+const renderNestedObject = (nestedObject: MyData) => {
+  return Object.entries(nestedObject).map(([nestedKey, nestedValue]) => {
+    if (typeof nestedKey !== 'object') {
+      return (
+        <List.Item
+          titleStyle={styles.txt}
+          style={styles.listItemNested}
+          key={nestedKey}
+          title={nestedKey}
+          description={nestedValue === null ? 'null' : nestedValue.toString()}
+          descriptionNumberOfLines={5}
+        />
+      );
+    } else {
+      return (
+        <List.Accordion
+          style={styles.containerNested}
+          titleStyle={styles.txt2}
+          key={nestedKey}
+          title={nestedKey}
+          left={props => <List.Icon {...props} icon="folder" />}
+          descriptionNumberOfLines={5}>
+          {nestedValue !== null && renderNestedObject(nestedValue)}
+        </List.Accordion>
+      );
+    }
+  });
+};
 const ListItemComponent = ({props}: MyProps) => {
-  // const [expanded, setExpanded] = React.useState(false);
-  // const handlePress = () => setExpanded(!expanded);
+  const [expanded, setExpanded] = React.useState(false);
+  const handlePress = () => setExpanded(!expanded);
+  // console.log('props');
+  // console.log(props[0]);
   return (
     <List.Section>
-
       {props.map((item, index) => (
         <List.Accordion
-          style={styles.container}
+          titleStyle={styles.txt1}
+          style={expanded ? styles.containerActive : styles.container}
+          theme={{colors: {primary: 'black'}}}
           key={index}
           title={'Item' + ' ' + (index + 1).toString()}
-          right={props => (
-            <List.Icon {...props} color={MD3Colors.tertiary70} icon="folder" />
-          )}
-          // expanded={expanded}
-          // onPress={handlePress}
-          theme={DefaultTheme}>
-          <List.Item
-            title={item.login}
-            theme={DefaultTheme}
-            titleNumberOfLines={5}
-          />
-          <List.Item
-            title={item.id}
-            theme={DefaultTheme}
-            titleNumberOfLines={5}
-          />
-          <List.Item
-            title={item.node_id}
-            theme={DefaultTheme}
-            titleNumberOfLines={5}
-          />
-          <List.Item
-            title={item.avatar_url}
-            theme={DefaultTheme}
-            titleNumberOfLines={5}
-          />
-          <List.Item
-            title={item.gravatar_id}
-            theme={DefaultTheme}
-            titleNumberOfLines={5}
-          />
-          <List.Item
-            title={item.url}
-            theme={DefaultTheme}
-            titleNumberOfLines={5}
-          />
-          <List.Item
-            title={item.html_url}
-            theme={DefaultTheme}
-            titleNumberOfLines={5}
-          />
-          <List.Item
-            title={item.followers_url}
-            theme={DefaultTheme}
-            titleNumberOfLines={5}
-          />
-          <List.Item
-            title={item.following_url}
-            theme={DefaultTheme}
-            titleNumberOfLines={5}
-          />
-          <List.Item
-            title={item.gists_url}
-            theme={DefaultTheme}
-            titleNumberOfLines={5}
-          />
-          <List.Item
-            title={item.starred_url}
-            theme={DefaultTheme}
-            titleNumberOfLines={5}
-          />
-          <List.Item
-            title={item.subscriptions_url}
-            theme={DefaultTheme}
-            titleNumberOfLines={5}
-          />
-          <List.Item
-            title={item.organizations_url}
-            theme={DefaultTheme}
-            titleNumberOfLines={5}
-          />
-          <List.Item
-            title={item.repos_url}
-            theme={DefaultTheme}
-            titleNumberOfLines={5}
-          />
-          <List.Item
-            title={item.events_url}
-            theme={DefaultTheme}
-            titleNumberOfLines={5}
-          />
-          <List.Item
-            title={item.received_events_url}
-            theme={DefaultTheme}
-            titleNumberOfLines={5}
-          />
-          <List.Item
-            title={item.type}
-            theme={DefaultTheme}
-            titleNumberOfLines={5}
-          />
-          <List.Item
-            title={item.site_admin}
-            theme={DefaultTheme}
-            titleNumberOfLines={5}
-          />
+          left={props => <List.Icon {...props} icon="folder" />}
+          onPress={handlePress}>
+          {Object.entries(item).map(([key, value]) => {
+            if (typeof value === 'object' && value !== null) {
+              return (
+                <List.Accordion
+                  style={styles.containerNested}
+                  key={key}
+                  title={key}
+                  left={props => <List.Icon {...props} icon="folder" />}>
+                  {value !== null && renderNestedObject(value)}
+                </List.Accordion>
+              );
+            } else {
+              return (
+                <List.Item
+                  style={styles.listItem}
+                  titleStyle={styles.txt}
+                  key={key}
+                  title={key}
+                  description={value === null ? 'null' : value?.toString()}
+                  descriptionNumberOfLines={5}
+                />
+              );
+            }
+          })}
         </List.Accordion>
       ))}
     </List.Section>
@@ -163,11 +94,58 @@ const ListItemComponent = ({props}: MyProps) => {
 export default ListItemComponent;
 
 const styles = StyleSheet.create({
+  containerActive: {
+    flex: 1,
+    borderRadius: 5,
+    borderColor: '#F2CEA1',
+    borderLeftWidth: 4,
+    margin: 5,
+    backgroundColor: '#FFF6EE',
+  },
   container: {
     flex: 1,
     borderRadius: 5,
-    borderColor: 'blue',
-    borderWidth: 1,
+    borderColor: '#F2CEA1',
+    borderLeftWidth: 4,
     margin: 5,
+    backgroundColor: 'White',
+  },
+  containerNested: {
+    marginLeft: 10,
+    borderRadius: 5,
+    borderColor: '#F2CEA1',
+    borderLeftWidth: 4,
+    margin: 5,
+    backgroundColor: '#FFF6EE',
+  },
+  txt: {
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  txt1: {
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
+  txt2: {
+    fontWeight: 'bold',
+  },
+  listItem: {
+    backgroundColor: '#f0f0f0',
+    padding: 10,
+    borderRadius: 5,
+    margin: 5,
+    marginLeft: 10,
+    borderColor: '#F2CEA1',
+    borderLeftWidth: 4,
+  },
+  listItemNested: {
+    backgroundColor: '#f0f0f0',
+    padding: 10,
+    borderRadius: 5,
+    marginBottom: 10,
+    marginStart: 20,
+    margin: 5,
+    borderColor: '#F2CEA1',
+    borderLeftWidth: 4,
   },
 });

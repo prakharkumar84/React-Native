@@ -1,42 +1,25 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useRef, useState} from 'react';
+import {FlatList} from 'react-native';
 import {
   TouchableOpacity,
   Dimensions,
   StyleSheet,
   Text,
   View,
-  Button,
+  ImageBackground,
 } from 'react-native';
-
+interface Timer {
+  id: string;
+  time: string;
+}
 function App() {
   const [timer, setTimer] = useState(0);
   const [isRunning, setIsRunning] = useState(false);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
   const [millis, setMillis] = useState(0);
   const millisecondRef = useRef<NodeJS.Timeout | null>(null);
-  const [isSaved, setisSaved] = useState(false);
-  const [components, setComponents] = useState<JSX.Element[]>([]);
-  useEffect(() => {
-    // Function to add components back-to-back
-    const addComponents = () => {
-      const newComponents: JSX.Element[] = [];
+  const [components, setComponents] = useState<Timer[]>([]);
 
-      // Add component 1
-      newComponents.push(<Text key="component1">Component 1</Text>);
-
-      // Add component 2
-      newComponents.push(<Text key="component2">Component 2</Text>);
-
-      // Add component 3
-      newComponents.push(<Text key="component3">Component 3</Text>);
-
-      setComponents(newComponents);
-    };
-
-    // Call the addComponents function on event trigger
-    // For example, when a button is pressed
-    addComponents();
-  }, []);
   const formatTime = (time: number) => {
     const hours = Math.floor(time / 60 / 60);
     const minutes = Math.floor(time / 60);
@@ -58,6 +41,13 @@ function App() {
   const stopTimer = () => {
     if (isRunning) {
       setIsRunning(false);
+      let newTimer = formatTime(timer);
+      const newItem: Timer = {
+        id: Math.floor(Math.random() * 1000).toString(),
+        time: newTimer,
+      };
+      setComponents(arr => [...arr, newItem]);
+      console.log(components);
       if (intervalRef.current) {
         clearInterval(intervalRef.current);
       }
@@ -69,7 +59,6 @@ function App() {
   const startTimer = () => {
     if (!isRunning) {
       setIsRunning(true);
-      setisSaved(true);
       intervalRef.current = setInterval(() => {
         setTimer(prevTimer => prevTimer + 1);
       }, 1000);
@@ -87,7 +76,7 @@ function App() {
     stopTimer();
     setTimer(0);
     setMillis(0);
-    setisSaved(false);
+    setComponents([]);
   };
   return (
     <View style={styles.container}>
@@ -95,7 +84,13 @@ function App() {
         <Text style={styles.navText}>Stopwatch</Text>
       </View>
       <View style={styles.count}>
-        <Text style={styles.timer}>{formatTime(timer)}</Text>
+        <View style={styles.round}>
+          <ImageBackground
+            style={styles.image}
+            source={{uri: 'https://clipart-library.com/images/8TzKz9yRc.png'}}>
+            <Text style={styles.timer}>{formatTime(timer)}</Text>
+          </ImageBackground>
+        </View>
       </View>
 
       <View style={styles.buttonContainer}>
@@ -107,15 +102,18 @@ function App() {
         </TouchableOpacity>
       </View>
       <View style={styles.time}>
-        {isSaved && (
-          <View>
-            <Text>{timer}</Text>
-          </View>
-        )}
-      </View>
-      <View>
-        <Button title="Add Components" onPress={() => {}} />
-        {components}
+        {
+          <FlatList
+            data={components}
+            renderItem={item => (
+              <View style={styles.card}>
+                <Text style={styles.cardTxt}>{`Lap:`}</Text>
+                <Text>{item.item.time}</Text>
+              </View>
+            )}
+            keyExtractor={item => item.id}
+          />
+        }
       </View>
     </View>
   );
@@ -147,10 +145,38 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  timer: {
-    fontSize: 30,
-    marginBottom: 20,
+  round: {
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
+  image: {
+    height: 250,
+    width: 250,
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  timer: {
+    padding: 10,
+    fontSize: 20,
+  },
+  card: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'flex-start',
+    marginTop: 10,
+    paddingBottom: 5,
+    borderColor: 'black',
+    borderBottomWidth: 2,
+    marginHorizontal: 50,
+    borderRadius: 5,
+  },
+  cardTxt: {
+    fontWeight: '600',
+    marginHorizontal: 10,
+  },
+
   buttonContainer: {
     flexDirection: 'row',
     justifyContent: 'center',
